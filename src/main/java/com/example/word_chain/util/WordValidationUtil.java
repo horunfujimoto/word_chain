@@ -26,4 +26,13 @@ public class WordValidationUtil {
         }
         return false;
     }
+
+    public Boolean isWordEndingWithN(String word) {
+        char lastChar = word.charAt(word.length() - 1);
+    
+        if (Character.toString(lastChar).equals("ん")) {
+            return true;
+        }
+        return false;
+    }
 }

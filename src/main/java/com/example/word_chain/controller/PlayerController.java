@@ -33,9 +33,9 @@ public class PlayerController {
         List<UsedWord> usedWords = service.getUsedWords();
         String previousWord = (String) session.getAttribute("previousWord");
 
-        if (validation.isWordAlreadyUsed(form.getWord(), usedWords)) {
-            return  ResponseEntity.ok()
-                            .body("この単語はすでに使われています！");
+        if (validation.isWordEndingWithN(form.getWord())) {
+            return ResponseEntity.ok()
+                        .body("「ん」がついたのであなたの負けです！");
         }
         if (previousWord != null) {
             if (!validation.isLastCharacterMatch(previousWord, form.getWord())) {
@@ -43,6 +43,11 @@ public class PlayerController {
                             .body("前の言葉に続いていません！(前の言葉："+ previousWord + ")");
             }
         }
+        if (validation.isWordAlreadyUsed(form.getWord(), usedWords)) {
+            return  ResponseEntity.ok()
+                            .body("この単語はすでに使われています！");
+        }
+        
         Integer firstId = letterUtil.findFirstLetter(form).getId();
         Integer lastId = letterUtil.findLastLetter(form).getId();
         String word = service.getWord(lastId);
