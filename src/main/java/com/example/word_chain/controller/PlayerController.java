@@ -19,8 +19,6 @@ import com.example.word_chain.util.WordValidationUtil;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
-
-
 @RestController
 @RequiredArgsConstructor
 public class PlayerController {
@@ -32,35 +30,38 @@ public class PlayerController {
     public ResponseEntity<String> play(@ModelAttribute @Validated WordChainForm form, Model model, HttpSession session) {
         List<UsedWord> usedWords = service.getUsedWords();
         String previousWord = (String) session.getAttribute("previousWord");
+        String currentWord = form.getWord();
 
-        if (validation.isWordEndingWithN(form.getWord())) {
+        if (validation.isWordEndingWithN(currentWord)) {
             return ResponseEntity.ok()
                         .body("「ん」がついたのであなたの負けです！");
         }
         if (previousWord != null) {
-            if (!validation.isLastCharacterMatch(previousWord, form.getWord())) {
+            if (!validation.isLastCharacterMatch(previousWord, currentWord)) {
                 return ResponseEntity.ok()
                             .body("前の言葉に続いていません！(前の言葉："+ previousWord + ")");
             }
         }
-        if (validation.isWordAlreadyUsed(form.getWord(), usedWords)) {
+        if (validation.isWordAlreadyUsed(currentWord, usedWords)) {
             return  ResponseEntity.ok()
                             .body("この単語はすでに使われています！");
         }
-        
-        Integer firstId = letterUtil.findFirstLetter(form).getId();
-        Integer lastId = letterUtil.findLastLetter(form).getId();
+
+        String normalizedCurrentWord = validation.normalizeString(currentWord);
+        Integer firstId = letterUtil.findFirstLetter(normalizedCurrentWord).getId();
+        Integer lastId = letterUtil.findLastLetter(normalizedCurrentWord).getId();
         String word = service.getWord(lastId);
         session.setAttribute("previousWord", word);
         service.setUsedWord(form);
-        service.setNewWord(firstId, form.getWord());
+        service.setNewWord(firstId, currentWord);
         return ResponseEntity.ok()
                     .body(word);  
     }
 
     @GetMapping("/reset")
-    public String resetWord() {
+    public String resetWord(HttpSession session) {
         service.resetWord();
+        session.removeAttribute("previousWord");
         return "リセットが完了しました";
     }
     
