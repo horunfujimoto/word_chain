@@ -33,6 +33,7 @@ public class PlayerController {
         String currentWord = form.getWord();
 
         if (validation.isWordEndingWithN(currentWord)) {
+            service.resetWord();
             return ResponseEntity.ok()
                         .body("「ん」がついたのであなたの負けです！");
         }
@@ -51,6 +52,11 @@ public class PlayerController {
         Integer firstId = letterUtil.findFirstLetter(normalizedCurrentWord).getId();
         Integer lastId = letterUtil.findLastLetter(normalizedCurrentWord).getId();
         String word = service.getWord(lastId);
+        if (word == null) {
+            service.resetWord();
+            return ResponseEntity.ok()
+                        .body("降参です、、、あなたの勝ちです！");
+        }
         session.setAttribute("previousWord", word);
         service.setUsedWord(form);
         service.setNewWord(firstId, currentWord);

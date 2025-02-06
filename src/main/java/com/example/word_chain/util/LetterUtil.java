@@ -17,6 +17,9 @@ public class LetterUtil {
     public Letter findLastLetter(String currentWord) {
         String word = currentWord;
         char lastChar = word.charAt(word.length() - 1);
+        if (String.valueOf(lastChar).equals("ー")) {
+            lastChar  = word.charAt(word.length() - 2);
+         }
         String letter = String.valueOf(lastChar);
         List<Letter> letters = service.getAllLetters();
         for (Letter l : letters) {
