@@ -19,6 +19,9 @@ public class WordService {
 
     public String getWord(Integer id) {
         List<Word> words = repository.findUnusedWord(id);
+        if (words.isEmpty()) {
+            return null; 
+        }
         Word word = words.getFirst();
         String ret = word.getWord();
         service.addUsedWord(word);
