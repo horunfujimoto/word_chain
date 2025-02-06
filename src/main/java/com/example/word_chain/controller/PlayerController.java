@@ -49,8 +49,8 @@ public class PlayerController {
         }
 
         String normalizedCurrentWord = validation.normalizeString(currentWord);
-        Integer firstId = letterUtil.findFirstLetter(normalizedCurrentWord).getId();
-        Integer lastId = letterUtil.findLastLetter(normalizedCurrentWord).getId();
+        Integer firstId = letterUtil.findLetter(normalizedCurrentWord, "first").getId();
+        Integer lastId = letterUtil.findLetter(normalizedCurrentWord, "last").getId();
         String word = service.getWord(lastId);
         if (word == null) {
             service.resetWord();

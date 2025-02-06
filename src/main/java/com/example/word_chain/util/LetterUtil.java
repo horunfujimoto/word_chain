@@ -14,34 +14,26 @@ import lombok.RequiredArgsConstructor;
 public class LetterUtil {
     private final LetterService service;
 
-    public Letter findLastLetter(String currentWord) {
+    public Letter findLetter(String currentWord, String position) {
         String word = currentWord;
-        char lastChar = word.charAt(word.length() - 1);
-        if (String.valueOf(lastChar).equals("ー")) {
-            lastChar  = word.charAt(word.length() - 2);
-         }
-        String letter = String.valueOf(lastChar);
+        char charValue;
+
+        if (position.equals("first")) {
+             charValue  = word.charAt(0);
+        } else {
+             charValue  = word.charAt(word.length() - 1);
+             if (String.valueOf(charValue).equals("ー")) {
+                charValue  = word.charAt(word.length() - 2);
+             }
+        }
+        
+        String letter = String.valueOf(charValue);
         List<Letter> letters = service.getAllLetters();
         for (Letter l : letters) {
             if (l.getLetter().equals(letter)) {
                 return l;
             }
         }
- 
-        return null;
-    }
-
-    public Letter findFirstLetter(String currentWord) {
-        String word = currentWord;
-        char firstChar = word.charAt(0);
-        String letter = String.valueOf(firstChar);
-        List<Letter> letters = service.getAllLetters();
-        for (Letter l : letters) {
-            if (l.getLetter().equals(letter)) {
-                return l;
-            }
-        }
-
         return null;
     }
 }
