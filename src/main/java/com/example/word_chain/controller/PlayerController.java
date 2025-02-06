@@ -34,6 +34,7 @@ public class PlayerController {
 
         if (validation.isWordEndingWithN(currentWord)) {
             service.resetWord();
+            session.removeAttribute("previousWord");
             return ResponseEntity.ok()
                         .body("「ん」がついたのであなたの負けです！");
         }
@@ -54,6 +55,7 @@ public class PlayerController {
         String word = service.getWord(lastId);
         if (word == null) {
             service.resetWord();
+            session.removeAttribute("previousWord");
             return ResponseEntity.ok()
                         .body("降参です、、、あなたの勝ちです！");
         }
